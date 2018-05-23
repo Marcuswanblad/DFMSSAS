@@ -1,0 +1,675 @@
+{
+  "name": "SemanticModel",
+  "compatibilityLevel": 1200,
+  "model": {
+    "culture": "sv-SE",
+    "dataSources": [
+      {
+        "name": "SqlServer DESKTOP-R2GCFSOSQL2017 DFMDW",
+        "connectionString": "Provider=SQLNCLI11;Data Source=DESKTOP-R2GCFSO\\SQL2017;Initial Catalog=DFMDW;Integrated Security=SSPI;Persist Security Info=false",
+        "impersonationMode": "impersonateAccount",
+        "account": "marcus@wanblad.se",
+        "annotations": [
+          {
+            "name": "ConnectionEditUISource",
+            "value": "SqlServer"
+          }
+        ]
+      }
+    ],
+    "tables": [
+      {
+        "name": "DataW",
+        "columns": [
+          {
+            "name": "ID",
+            "dataType": "int64",
+            "sourceColumn": "ID",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "PlateID",
+            "dataType": "string",
+            "sourceColumn": "PlateID",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "RegistrationState",
+            "dataType": "string",
+            "sourceColumn": "RegistrationState",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "PlateType",
+            "dataType": "string",
+            "sourceColumn": "PlateType",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "IssueDate",
+            "dataType": "dateTime",
+            "sourceColumn": "IssueDate",
+            "formatString": "General Date",
+            "sourceProviderType": "DBDate"
+          },
+          {
+            "name": "ViolationCode",
+            "dataType": "int64",
+            "sourceColumn": "ViolationCode",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "VehicleBodyTypeID",
+            "dataType": "string",
+            "sourceColumn": "VehicleBodyTypeID",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "VehicleMakeID",
+            "dataType": "string",
+            "sourceColumn": "VehicleMakeID",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "IssuingAgency",
+            "dataType": "string",
+            "sourceColumn": "IssuingAgency",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "ViolationLocation",
+            "dataType": "int64",
+            "sourceColumn": "ViolationLocation",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "IssuerCode",
+            "dataType": "int64",
+            "sourceColumn": "IssuerCode",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "ViolationTime",
+            "dataType": "int64",
+            "sourceColumn": "ViolationTime",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "ViolationCounty",
+            "dataType": "string",
+            "sourceColumn": "ViolationCounty",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "HouseNumber",
+            "dataType": "string",
+            "sourceColumn": "HouseNumber",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "StreetName",
+            "dataType": "string",
+            "sourceColumn": "StreetName",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "IntersectingStreet",
+            "dataType": "string",
+            "sourceColumn": "IntersectingStreet",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "VehicleColorID",
+            "dataType": "int64",
+            "sourceColumn": "VehicleColorID",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "VehicleYear",
+            "dataType": "int64",
+            "sourceColumn": "VehicleYear",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "ViolationPostCode",
+            "dataType": "string",
+            "sourceColumn": "ViolationPostCode",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "ViolationDescription",
+            "dataType": "string",
+            "sourceColumn": "ViolationDescription",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "type": "calculated",
+            "name": "IsManhattan",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "IF(DataW[ViolationLocation]<35,1,0)"
+          },
+          {
+            "type": "calculated",
+            "name": "Fee",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "IF(DataW[IsManhattan]=1,RELATED(DimViolationCode[ManhattanLower]),RELATED(DimViolationCode[Other]))"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DataW",
+            "dataView": "full",
+            "source": {
+              "query": " SELECT [dbo].[DataW].* FROM [dbo].[DataW] ",
+              "dataSource": "SqlServer DESKTOP-R2GCFSOSQL2017 DFMDW"
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "CountRows",
+            "expression": "COUNTROWS(DataW)"
+          },
+          {
+            "name": "FeeSum",
+            "expression": "SUM(DataW[Fee])"
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": " SELECT [dbo].[DataW].* FROM [dbo].[DataW] "
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "DataW"
+          },
+          {
+            "name": "_TM_ExtProp_DbSchemaName",
+            "value": "dbo"
+          }
+        ]
+      },
+      {
+        "name": "DimAgency",
+        "columns": [
+          {
+            "name": "Agency Name",
+            "dataType": "string",
+            "sourceColumn": "Agency Name",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "Agency Code",
+            "dataType": "string",
+            "sourceColumn": "Agency Code",
+            "sourceProviderType": "WChar"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DimAgency",
+            "dataView": "full",
+            "source": {
+              "query": " SELECT [dbo].[DimAgency].* FROM [dbo].[DimAgency] ",
+              "dataSource": "SqlServer DESKTOP-R2GCFSOSQL2017 DFMDW"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": " SELECT [dbo].[DimAgency].* FROM [dbo].[DimAgency] "
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "DimAgency"
+          },
+          {
+            "name": "_TM_ExtProp_DbSchemaName",
+            "value": "dbo"
+          }
+        ]
+      },
+      {
+        "name": "DimBodyType",
+        "columns": [
+          {
+            "name": "ID",
+            "dataType": "int64",
+            "sourceColumn": "ID",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "BodyType",
+            "dataType": "string",
+            "sourceColumn": "BodyType",
+            "sourceProviderType": "WChar"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DimBodyType",
+            "dataView": "full",
+            "source": {
+              "query": " SELECT [dbo].[DimBodyType].* FROM [dbo].[DimBodyType] ",
+              "dataSource": "SqlServer DESKTOP-R2GCFSOSQL2017 DFMDW"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": " SELECT [dbo].[DimBodyType].* FROM [dbo].[DimBodyType] "
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "DimBodyType"
+          },
+          {
+            "name": "_TM_ExtProp_DbSchemaName",
+            "value": "dbo"
+          }
+        ]
+      },
+      {
+        "name": "DimCarBrands",
+        "columns": [
+          {
+            "name": "ID",
+            "dataType": "int64",
+            "sourceColumn": "ID",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "Brand",
+            "dataType": "string",
+            "sourceColumn": "Brand",
+            "sourceProviderType": "WChar"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DimCarBrands",
+            "dataView": "full",
+            "source": {
+              "query": " SELECT [dbo].[DimCarBrands].* FROM [dbo].[DimCarBrands] ",
+              "dataSource": "SqlServer DESKTOP-R2GCFSOSQL2017 DFMDW"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": " SELECT [dbo].[DimCarBrands].* FROM [dbo].[DimCarBrands] "
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "DimCarBrands"
+          },
+          {
+            "name": "_TM_ExtProp_DbSchemaName",
+            "value": "dbo"
+          }
+        ]
+      },
+      {
+        "name": "DimColor",
+        "columns": [
+          {
+            "name": "ID",
+            "dataType": "int64",
+            "sourceColumn": "ID",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "BodyType",
+            "dataType": "string",
+            "sourceColumn": "BodyType",
+            "sourceProviderType": "WChar"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DimColor",
+            "dataView": "full",
+            "source": {
+              "query": " SELECT [dbo].[DimColor].* FROM [dbo].[DimColor] ",
+              "dataSource": "SqlServer DESKTOP-R2GCFSOSQL2017 DFMDW"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": " SELECT [dbo].[DimColor].* FROM [dbo].[DimColor] "
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "DimColor"
+          },
+          {
+            "name": "_TM_ExtProp_DbSchemaName",
+            "value": "dbo"
+          }
+        ]
+      },
+      {
+        "name": "DimDistrict",
+        "columns": [
+          {
+            "name": "Pricinct",
+            "dataType": "int64",
+            "sourceColumn": "Pricinct",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "Borough",
+            "dataType": "string",
+            "sourceColumn": "Borough",
+            "sourceProviderType": "WChar"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DimDistrict",
+            "dataView": "full",
+            "source": {
+              "query": " SELECT [dbo].[DimDistrict].* FROM [dbo].[DimDistrict] ",
+              "dataSource": "SqlServer DESKTOP-R2GCFSOSQL2017 DFMDW"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": " SELECT [dbo].[DimDistrict].* FROM [dbo].[DimDistrict] "
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "DimDistrict"
+          },
+          {
+            "name": "_TM_ExtProp_DbSchemaName",
+            "value": "dbo"
+          }
+        ]
+      },
+      {
+        "name": "DimStates",
+        "columns": [
+          {
+            "name": "State Name",
+            "dataType": "string",
+            "sourceColumn": "State Name",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "StateCode",
+            "dataType": "string",
+            "sourceColumn": "StateCode",
+            "sourceProviderType": "WChar"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DimStates",
+            "dataView": "full",
+            "source": {
+              "query": " SELECT [dbo].[DimStates].* FROM [dbo].[DimStates] ",
+              "dataSource": "SqlServer DESKTOP-R2GCFSOSQL2017 DFMDW"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": " SELECT [dbo].[DimStates].* FROM [dbo].[DimStates] "
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "DimStates"
+          },
+          {
+            "name": "_TM_ExtProp_DbSchemaName",
+            "value": "dbo"
+          }
+        ]
+      },
+      {
+        "name": "DimViolationCode",
+        "columns": [
+          {
+            "name": "Code",
+            "dataType": "int64",
+            "sourceColumn": "Code",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "Definition",
+            "dataType": "string",
+            "sourceColumn": "Definition",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "ManhattanLower",
+            "dataType": "int64",
+            "sourceColumn": "ManhattanLower",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "Other",
+            "dataType": "int64",
+            "sourceColumn": "Other",
+            "sourceProviderType": "Integer"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DimViolationCode",
+            "dataView": "full",
+            "source": {
+              "query": " SELECT [dbo].[DimViolationCode].* FROM [dbo].[DimViolationCode] ",
+              "dataSource": "SqlServer DESKTOP-R2GCFSOSQL2017 DFMDW"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": " SELECT [dbo].[DimViolationCode].* FROM [dbo].[DimViolationCode] "
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "DimViolationCode"
+          },
+          {
+            "name": "_TM_ExtProp_DbSchemaName",
+            "value": "dbo"
+          }
+        ]
+      },
+      {
+        "name": "DimDate",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "Date",
+            "dataType": "dateTime",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[Date]"
+          },
+          {
+            "type": "calculated",
+            "name": "Year",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "YEAR('DimDate'[Date])"
+          },
+          {
+            "type": "calculated",
+            "name": "Quarter",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "CONCATENATE(\"Q\",ROUND(MONTH('DimDate'[Date])/3,0))"
+          },
+          {
+            "type": "calculated",
+            "name": "Month",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "MONTH('DimDate'[Date])"
+          },
+          {
+            "type": "calculated",
+            "name": "MonthName",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "FORMAT('DimDate'[Date],\"MMMM\")"
+          },
+          {
+            "type": "calculated",
+            "name": "Season",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": " IF('DimDate'[Month]<3,\"winter\",IF('DimDate'[Month]=12,\"winter\",IF('DimDate'[Month]<6,\"spring\",IF('DimDate'[Month]<9,\"summer\",\"autum\"))))"
+          },
+          {
+            "type": "calculated",
+            "name": "Day",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "DAY('DimDate'[Date])"
+          },
+          {
+            "type": "calculated",
+            "name": "Weekday",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "WEEKDAY('DimDate'[Date])"
+          },
+          {
+            "type": "calculated",
+            "name": "WeekdayName",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "FORMAT('DimDate'[Date],\"DDDD\")"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "CalculatedTable 1",
+            "source": {
+              "type": "calculated",
+              "expression": "CALENDAR(FIRSTDATE(DataW[IssueDate]),LASTDATE(DataW[IssueDate]))"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Hours",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "Hours",
+            "dataType": "int64",
+            "isNameInferred": false,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[Value]"
+          },
+          {
+            "type": "calculated",
+            "name": "TimeOfDay",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IF(Hours[Hours]<6,\"night\",IF(Hours[Hours]<12,\"morning\",IF(Hours[Hours]<19,\"afternoon\",\"evening\")))"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "CalculatedTable 1",
+            "source": {
+              "type": "calculated",
+              "expression": "GENERATESERIES(0,23)"
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "299d709d-c92b-47b6-b640-2875d365f208",
+        "fromTable": "DataW",
+        "fromColumn": "IssuingAgency",
+        "toTable": "DimAgency",
+        "toColumn": "Agency Code"
+      },
+      {
+        "name": "967bcdb3-cc53-4b0a-bd7b-2150730d3e5d",
+        "fromTable": "DataW",
+        "fromColumn": "VehicleBodyTypeID",
+        "toTable": "DimBodyType",
+        "toColumn": "ID"
+      },
+      {
+        "name": "0c52eeb0-3474-44ec-b6e3-8c8dbc675005",
+        "fromTable": "DataW",
+        "fromColumn": "VehicleMakeID",
+        "toTable": "DimCarBrands",
+        "toColumn": "ID"
+      },
+      {
+        "name": "9a07e2e5-743e-43c8-bd41-162b276037f8",
+        "fromTable": "DataW",
+        "fromColumn": "VehicleColorID",
+        "toTable": "DimColor",
+        "toColumn": "ID"
+      },
+      {
+        "name": "f1f530e0-7a80-4a4b-844a-7cbc5a2c0005",
+        "fromTable": "DataW",
+        "fromColumn": "RegistrationState",
+        "toTable": "DimStates",
+        "toColumn": "StateCode"
+      },
+      {
+        "name": "4146516b-1ee1-4bf3-8fbd-d501dcdbe692",
+        "fromTable": "DataW",
+        "fromColumn": "ViolationLocation",
+        "toTable": "DimDistrict",
+        "toColumn": "Pricinct"
+      },
+      {
+        "name": "7df086ad-1810-4cf7-82e0-9cc899892605",
+        "fromTable": "DataW",
+        "fromColumn": "IssueDate",
+        "toTable": "DimDate",
+        "toColumn": "Date"
+      },
+      {
+        "name": "a53c3f48-7d18-4e80-829c-0a665b3ed910",
+        "fromTable": "DataW",
+        "fromColumn": "ViolationCode",
+        "toTable": "DimViolationCode",
+        "toColumn": "Code"
+      },
+      {
+        "name": "6689563c-4261-400f-9c67-cf3505ad17e6",
+        "fromTable": "DataW",
+        "fromColumn": "ViolationTime",
+        "toTable": "Hours",
+        "toColumn": "Hours"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "ClientCompatibilityLevel",
+        "value": "400"
+      }
+    ]
+  },
+  "id": "SemanticModel"
+}

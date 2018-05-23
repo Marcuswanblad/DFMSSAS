@@ -1,0 +1,6 @@
+c:\users\marcu\source\repos\DFMSSASCUBE\DFMSSASCUBE\bin\Model.asdatabase
+c:\users\marcu\source\repos\DFMSSASCUBE\DFMSSASCUBE\bin\Model.deploymenttargets
+c:\users\marcu\source\repos\DFMSSASCUBE\DFMSSASCUBE\bin\Model.deploymentoptions
+c:\users\marcu\source\repos\DFMSSASCUBE\DFMSSASCUBE\obj\Development\Model.asdatabase
+c:\users\marcu\source\repos\DFMSSASCUBE\DFMSSASCUBE\obj\Development\Model.deploymentoptions
+c:\users\marcu\source\repos\DFMSSASCUBE\DFMSSASCUBE\obj\Development\Model.deploymenttargets

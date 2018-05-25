@@ -36,6 +36,7 @@
           {
             "name": "RegistrationState",
             "dataType": "string",
+            "isHidden": true,
             "sourceColumn": "RegistrationState",
             "sourceProviderType": "WChar"
           },
@@ -61,24 +62,28 @@
           {
             "name": "VehicleBodyTypeID",
             "dataType": "string",
+            "isHidden": true,
             "sourceColumn": "VehicleBodyTypeID",
             "sourceProviderType": "WChar"
           },
           {
             "name": "VehicleMakeID",
             "dataType": "string",
+            "isHidden": true,
             "sourceColumn": "VehicleMakeID",
             "sourceProviderType": "WChar"
           },
           {
             "name": "IssuingAgency",
             "dataType": "string",
+            "isHidden": true,
             "sourceColumn": "IssuingAgency",
             "sourceProviderType": "WChar"
           },
           {
             "name": "ViolationLocation",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "ViolationLocation",
             "sourceProviderType": "Integer"
           },
@@ -121,6 +126,7 @@
           {
             "name": "VehicleColorID",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "VehicleColorID",
             "sourceProviderType": "Integer"
           },
@@ -147,7 +153,7 @@
             "name": "IsManhattan",
             "dataType": "int64",
             "isDataTypeInferred": true,
-            "expression": "IF(DataW[ViolationLocation]<35,1,0)"
+            "expression": "IF(DataW[ViolationLocation]<23,1,0)"
           },
           {
             "type": "calculated",
@@ -173,12 +179,15 @@
             "expression": "COUNTROWS(DataW)"
           },
           {
-            "name": "test",
-            "expression": "CALCULATE(SUM(DimViolationCode[ManhattanLower]),FILTER(DataW,DataW[ViolationCode]<35))"
-          },
-          {
             "name": "FeeSum",
-            "expression": "SUM(DataW[Fee])"
+            "expression": "SUM(DataW[Fee])",
+            "formatString": "\\$#,0;(\\$#,0);\\$#,0",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
           }
         ],
         "annotations": [
@@ -208,6 +217,7 @@
           {
             "name": "Agency Code",
             "dataType": "string",
+            "isHidden": true,
             "sourceColumn": "Agency Code",
             "sourceProviderType": "WChar"
           }
@@ -243,6 +253,7 @@
           {
             "name": "ID",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "ID",
             "sourceProviderType": "Integer"
           },
@@ -284,6 +295,7 @@
           {
             "name": "ID",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "ID",
             "sourceProviderType": "Integer"
           },
@@ -320,52 +332,12 @@
         ]
       },
       {
-        "name": "DimColor",
-        "columns": [
-          {
-            "name": "ID",
-            "dataType": "int64",
-            "sourceColumn": "ID",
-            "sourceProviderType": "Integer"
-          },
-          {
-            "name": "BodyType",
-            "dataType": "string",
-            "sourceColumn": "BodyType",
-            "sourceProviderType": "WChar"
-          }
-        ],
-        "partitions": [
-          {
-            "name": "DimColor",
-            "dataView": "full",
-            "source": {
-              "query": " SELECT [dbo].[DimColor].* FROM [dbo].[DimColor] ",
-              "dataSource": "SqlServer DESKTOP-R2GCFSOSQL2017 DFMDW"
-            }
-          }
-        ],
-        "annotations": [
-          {
-            "name": "_TM_ExtProp_QueryDefinition",
-            "value": " SELECT [dbo].[DimColor].* FROM [dbo].[DimColor] "
-          },
-          {
-            "name": "_TM_ExtProp_DbTableName",
-            "value": "DimColor"
-          },
-          {
-            "name": "_TM_ExtProp_DbSchemaName",
-            "value": "dbo"
-          }
-        ]
-      },
-      {
         "name": "DimDistrict",
         "columns": [
           {
             "name": "Pricinct",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "Pricinct",
             "sourceProviderType": "Integer"
           },
@@ -413,6 +385,7 @@
           {
             "name": "StateCode",
             "dataType": "string",
+            "isHidden": true,
             "sourceColumn": "StateCode",
             "sourceProviderType": "WChar"
           }
@@ -497,6 +470,7 @@
       },
       {
         "name": "DimDate",
+        "dataCategory": "Time",
         "columns": [
           {
             "type": "calculatedTableColumn",
@@ -504,6 +478,7 @@
             "dataType": "dateTime",
             "isNameInferred": true,
             "isDataTypeInferred": true,
+            "isKey": true,
             "sourceColumn": "[Date]"
           },
           {
@@ -511,6 +486,7 @@
             "name": "Year",
             "dataType": "int64",
             "isDataTypeInferred": true,
+            "isHidden": true,
             "expression": "YEAR('DimDate'[Date])"
           },
           {
@@ -518,6 +494,7 @@
             "name": "Quarter",
             "dataType": "string",
             "isDataTypeInferred": true,
+            "isHidden": true,
             "expression": "CONCATENATE(\"Q\",ROUND(MONTH('DimDate'[Date])/3,0))"
           },
           {
@@ -525,6 +502,7 @@
             "name": "Month",
             "dataType": "int64",
             "isDataTypeInferred": true,
+            "isHidden": true,
             "expression": "MONTH('DimDate'[Date])"
           },
           {
@@ -539,6 +517,7 @@
             "name": "Season",
             "dataType": "string",
             "isDataTypeInferred": true,
+            "isHidden": true,
             "expression": " IF('DimDate'[Month]<3,\"winter\",IF('DimDate'[Month]=12,\"winter\",IF('DimDate'[Month]<6,\"spring\",IF('DimDate'[Month]<9,\"summer\",\"autum\"))))"
           },
           {
@@ -546,6 +525,7 @@
             "name": "Day",
             "dataType": "int64",
             "isDataTypeInferred": true,
+            "isHidden": true,
             "expression": "DAY('DimDate'[Date])"
           },
           {
@@ -571,6 +551,58 @@
               "expression": "CALENDAR(FIRSTDATE(DataW[IssueDate]),LASTDATE(DataW[IssueDate]))"
             }
           }
+        ],
+        "hierarchies": [
+          {
+            "name": "QuarterHierarchi",
+            "levels": [
+              {
+                "name": "Year",
+                "ordinal": 0,
+                "column": "Year"
+              },
+              {
+                "name": "Month",
+                "ordinal": 2,
+                "column": "Month"
+              },
+              {
+                "name": "Day",
+                "ordinal": 3,
+                "column": "Day"
+              },
+              {
+                "name": "Quarter",
+                "ordinal": 1,
+                "column": "Quarter"
+              }
+            ]
+          },
+          {
+            "name": "SeasonHierarchi",
+            "levels": [
+              {
+                "name": "Season",
+                "ordinal": 1,
+                "column": "Season"
+              },
+              {
+                "name": "Month",
+                "ordinal": 2,
+                "column": "Month"
+              },
+              {
+                "name": "Day",
+                "ordinal": 3,
+                "column": "Day"
+              },
+              {
+                "name": "Year",
+                "ordinal": 0,
+                "column": "Year"
+              }
+            ]
+          }
         ]
       },
       {
@@ -582,6 +614,7 @@
             "dataType": "int64",
             "isNameInferred": false,
             "isDataTypeInferred": true,
+            "isHidden": true,
             "sourceColumn": "[Value]"
           },
           {
@@ -589,6 +622,7 @@
             "name": "TimeOfDay",
             "dataType": "string",
             "isDataTypeInferred": true,
+            "isHidden": true,
             "expression": "IF(Hours[Hours]<6,\"night\",IF(Hours[Hours]<12,\"morning\",IF(Hours[Hours]<19,\"afternoon\",\"evening\")))"
           }
         ],
@@ -599,6 +633,65 @@
               "type": "calculated",
               "expression": "GENERATESERIES(0,23)"
             }
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Time",
+            "levels": [
+              {
+                "name": "Hours",
+                "ordinal": 1,
+                "column": "Hours"
+              },
+              {
+                "name": "TimeOfDay",
+                "ordinal": 0,
+                "column": "TimeOfDay"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "DimColor",
+        "columns": [
+          {
+            "name": "ID",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "ID",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "Color",
+            "dataType": "string",
+            "sourceColumn": "Color",
+            "sourceProviderType": "WChar"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DimColor",
+            "dataView": "full",
+            "source": {
+              "query": " SELECT [dbo].[DimColor].* FROM [dbo].[DimColor] ",
+              "dataSource": "SqlServer DESKTOP-R2GCFSOSQL2017 DFMDW"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": " SELECT [dbo].[DimColor].* FROM [dbo].[DimColor] "
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "DimColor"
+          },
+          {
+            "name": "_TM_ExtProp_DbSchemaName",
+            "value": "dbo"
           }
         ]
       }
@@ -623,13 +716,6 @@
         "fromTable": "DataW",
         "fromColumn": "VehicleMakeID",
         "toTable": "DimCarBrands",
-        "toColumn": "ID"
-      },
-      {
-        "name": "9a07e2e5-743e-43c8-bd41-162b276037f8",
-        "fromTable": "DataW",
-        "fromColumn": "VehicleColorID",
-        "toTable": "DimColor",
         "toColumn": "ID"
       },
       {
@@ -659,6 +745,20 @@
         "fromColumn": "ViolationCode",
         "toTable": "DimViolationCode",
         "toColumn": "Code"
+      },
+      {
+        "name": "6689563c-4261-400f-9c67-cf3505ad17e6",
+        "fromTable": "DataW",
+        "fromColumn": "ViolationTime",
+        "toTable": "Hours",
+        "toColumn": "Hours"
+      },
+      {
+        "name": "4aa0d97d-df23-45dd-ad2f-f2f12483771d",
+        "fromTable": "DataW",
+        "fromColumn": "VehicleColorID",
+        "toTable": "DimColor",
+        "toColumn": "ID"
       }
     ],
     "annotations": [
